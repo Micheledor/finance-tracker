@@ -9,6 +9,23 @@ class UsersController < ApplicationController
   end
 
   def search
-    render json: params[:friend]
+    if params[:friend].present?
+      @friend = params[:friend]
+      if @friend
+        respond_to do |format|
+          format.js { render partial: 'users/friend_result' }
+        end
+      else
+        respond_to do |format|
+          flash.now[:alert] = 'User not found'
+          format.js { render partial: 'users/friend_result' }
+        end
+      end
+    else
+      respond_to do |format|
+        flash.now[:alert] = 'Please enter a valid name or an email'
+        format.js { render partial: 'users/friend_result' }
+      end
+    end 
   end  
 end
